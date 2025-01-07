@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let recognition;
     let recordingStartTime;
     let recordingTimer;
+    let originalDescription = '';
 
     // Auto-resize textarea
     function autoResizeTextarea() {
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Store original description
+        originalDescription = description;
+
         // Create FormData object
         const formData = new FormData();
         formData.append('description', description);
@@ -39,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'  // Add this to help Flask identify AJAX requests
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             });
             
@@ -49,7 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const data = await response.json();
             
-            if (data.structured_complaint) {
+            if (data.status === 'incomplete') {
+                // Show modal to collect missing information
+                showMissingInfoModal(data.missing_info, data.current_details);
+            } else if (data.structured_complaint) {
                 displayComplaintResult(data.structured_complaint);
                 complaintForm.reset();
                 descriptionTextarea.style.height = 'auto';
@@ -62,6 +69,80 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('An error occurred while processing the complaint. Please try again.', 'error');
         }
     });
+
+    function showMissingInfoModal(missingInfo, currentDetails) {
+        // Create modal HTML
+        const modalHTML = `
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <h2>Additional Information Needed</h2>
+                    <p>Please provide the following details to complete your complaint:</p>
+                    <form id="missing-info-form" class="space-y-4">
+                        ${missingInfo.date ? `
+                            <div class="form-group">
+                                <label for="incident-date">Date of Incident</label>
+                                <input type="date" id="incident-date" name="date" required>
+                            </div>
+                        ` : ''}
+                        ${missingInfo.time ? `
+                            <div class="form-group">
+                                <label for="incident-time">Time of Incident</label>
+                                <input type="time" id="incident-time" name="time" required>
+                            </div>
+                        ` : ''}
+                        ${missingInfo.place ? `
+                            <div class="form-group">
+                                <label for="incident-place">Place of Incident</label>
+                                <input type="text" id="incident-place" name="place" required>
+                            </div>
+                        ` : ''}
+                        <div class="button-group">
+                            <button type="submit" class="submit-button">Submit</button>
+                            <button type="button" class="cancel-button" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+
+        // Add modal to page
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        // Handle form submission
+        const missingInfoForm = document.getElementById('missing-info-form');
+        missingInfoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(missingInfoForm);
+            formData.append('original_description', originalDescription);
+            
+            try {
+                const response = await fetch('/update_incident', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.structured_complaint) {
+                    displayComplaintResult(data.structured_complaint);
+                    complaintForm.reset();
+                    descriptionTextarea.style.height = 'auto';
+                    showNotification('Complaint submitted successfully', 'success');
+                    document.querySelector('.modal-overlay').remove();
+                } else {
+                    throw new Error('No complaint data received');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('An error occurred while updating the complaint. Please try again.', 'error');
+            }
+        });
+    }
 
     // Voice recording
     if (voiceInputBtn) {

@@ -142,3 +142,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle navigation state in browser history
     window.addEventListener('popstate', setActiveLink);
 });
+

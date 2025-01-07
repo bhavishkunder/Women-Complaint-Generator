@@ -96,13 +96,30 @@ Date: {datetime.now().strftime('%Y-%m-%d')}
     return complaint_template
 
 def process_incident(description, name, contact, email, address):
+    # Extract initial details
     extracted_details = extract_incident_details(description)
     details_dict = {}
     for line in extracted_details.split('\n'):
         if ': ' in line:
             key, value = line.split(': ', 1)
             details_dict[key] = value.strip()
-
+    
+    # Check for missing information
+    missing_info = {
+        'date': not details_dict.get('Date of Incident'),
+        'time': not details_dict.get('Time of Incident'),
+        'place': not details_dict.get('Place of Incident')
+    }
+    
+    if any(missing_info.values()):
+        # Return what information is missing
+        return {
+            'status': 'incomplete',
+            'missing_info': missing_info,
+            'current_details': details_dict
+        }
+    
+    # If all information is present, generate the complaint
     detailed_description = generate_detailed_description(description)
     complaint_analysis = analyze_complaint(description)
     structured_complaint = generate_structured_complaint(
@@ -118,7 +135,26 @@ def process_incident(description, name, contact, email, address):
     )
 
     return {
+        'status': 'complete',
         'structured_complaint': structured_complaint,
         'details': details_dict,
         'analysis': complaint_analysis
     }
+
+def update_incident_details(original_description, date=None, time=None, place=None):
+    # Create an updated description with the provided details
+    updates = []
+    if date:
+        updates.append(f"The incident occurred on {date}")
+    if time:
+        updates.append(f"at {time}")
+    if place:
+        updates.append(f"at {place}")
+    
+    if updates:
+        updated_description = f"{original_description}\n\nAdditional Details: {'. '.join(updates)}."
+    else:
+        updated_description = original_description
+    
+    return updated_description
+

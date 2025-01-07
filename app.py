@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 import os
 from dotenv import load_dotenv
 from datetime import datetime
-from agents import process_incident
+from agents import process_incident, update_incident_details
 
 load_dotenv()
 
@@ -27,7 +27,6 @@ def dashboard():
     user = mongo.db.users.find_one({'_id': ObjectId(session['user_id'])})
     return render_template('dashboard.html', user=user)
 
-# New routes
 @app.route('/emergency')
 def emergency():
     if 'user_id' not in session:
@@ -94,7 +93,6 @@ def handle_incident():
     if 'user_id' not in session:
         return jsonify({'error': 'Not logged in'}), 401
 
-    
     data = request.form
     description = data['description']
     user = mongo.db.users.find_one({'_id': ObjectId(session['user_id'])})
@@ -103,5 +101,39 @@ def handle_incident():
 
     return jsonify(result)
 
+@app.route('/update_incident', methods=['POST'])
+def update_incident():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not logged in'}), 401
+
+    data = request.form
+    original_description = data.get('original_description')
+    date = data.get('date')
+    time = data.get('time')
+    place = data.get('place')
+
+    # Update the description with the new details
+    updated_description = update_incident_details(
+        original_description,
+        date=date,
+        time=time,
+        place=place
+    )
+
+    # Get user information
+    user = mongo.db.users.find_one({'_id': ObjectId(session['user_id'])})
+
+    # Process the updated incident
+    result = process_incident(
+        updated_description,
+        user['name'],
+        user['contact'],
+        user['email'],
+        user['address']
+    )
+
+    return jsonify(result)
+
 if __name__ == '__main__':
     app.run(debug=True)
+
