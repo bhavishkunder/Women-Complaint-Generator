@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women Safety App - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="dark">
+    <div class="app-container">
+        <nav class="main-nav">
+            <div class="nav-content">
+                <div class="nav-left">
+                    <a href="{{ url_for('dashboard') }}" class="nav-logo">
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Safety First Logo">
+                        <span>Safety First</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            Dashboard
+                        </a>
+                        <a href="{{ url_for('emergency') }}" class="nav-link {% if request.endpoint == 'emergency' %}active{% endif %}">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            Emergency
+                        </a>
+                        <a href="{{ url_for('resources') }}" class="nav-link {% if request.endpoint == 'resources' %}active{% endif %}">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            Resources
+                        </a>
+                        <a href="{{ url_for('community') }}" class="nav-link {% if request.endpoint == 'community' %}active{% endif %}">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            Community
+                        </a>
+                        <a href="{{ url_for('settings') }}" class="nav-link {% if request.endpoint == 'settings' %}active{% endif %}">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            Settings
+                        </a>
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <div class="profile-section">
+                        <button id="profile-trigger" class="profile-button">
+                            <div class="profile-avatar">{{ user.name[0] }}</div>
+                        </button>
+                        <div id="profile-dropdown" class="profile-dropdown hidden">
+                            <div class="profile-header">
+                                <div class="profile-avatar large">{{ user.name[0] }}</div>
+                                <div class="profile-info">
+                                    <h3>{{ user.name }}</h3>
+                                    <p>{{ user.email }}</p>
+                                </div>
+                            </div>
+                            <div class="profile-details">
+                                <div class="detail-item">
+                                    <span class="label">Contact</span>
+                                    <span class="value">{{ user.contact }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Address</span>
+                                    <span class="value">{{ user.address }}</span>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('logout') }}" class="logout-button">Sign Out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="app-main">
+            <div class="chat-container">
+                <div id="complaint-result" class="complaint-result hidden">
+                    <!-- This will be populated by JavaScript -->
+                </div>
+
+                <div class="input-section">
+                    <form id="complaint-form" class="complaint-form">
+                        <div class="input-wrapper">
+                            <textarea 
+                                name="description" 
+                                placeholder="Describe what happened... We're here to help."
+                                rows="1"
+                                class="input-field"
+                            ></textarea>
+                            <div class="submit-group">
+                                <button type="submit" class="submit-button">Submit</button>
+                                <button type="button" id="voice-input-btn" class="voice-button">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                        <line x1="12" y1="19" x2="12" y2="23"/>
+                                        <line x1="8" y1="23" x2="16" y2="23"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="recording-indicator" class="recording-indicator hidden">
+                            <div class="recording-pulse"></div>
+                            <span id="recording-status">Recording</span>
+                            <span id="recording-time">00:00</span>
+                            <button type="button" id="stop-recording-btn" class="stop-button">
+                                Stop Recording
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

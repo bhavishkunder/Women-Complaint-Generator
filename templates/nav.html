@@ -1,0 +1,77 @@
+<nav class="main-nav">
+    <div class="nav-content">
+        <div class="nav-left">
+            <a href="{{ url_for('dashboard') }}" class="nav-logo">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Safety First Logo">
+                <span>Safety First</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('emergency') }}" class="nav-link {% if request.endpoint == 'emergency' %}active{% endif %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15.5 7.5a2 2 0 0 0-2-2M10.5 7.5a2 2 0 0 1 2-2M12 18v-2"></path>
+                        <path d="M12 12v-1"></path>
+                        <circle cx="12" cy="12" r="9"></circle>
+                    </svg>
+                    Emergency
+                </a>
+                <a href="{{ url_for('resources') }}" class="nav-link {% if request.endpoint == 'resources' %}active{% endif %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    Resources
+                </a>
+                <a href="{{ url_for('community') }}" class="nav-link {% if request.endpoint == 'community' %}active{% endif %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Community
+                </a>
+                <a href="{{ url_for('settings') }}" class="nav-link {% if request.endpoint == 'settings' %}active{% endif %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    Settings
+                </a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="profile-section">
+                <button id="profile-trigger" class="profile-button">
+                    <div class="profile-avatar">{{ user.name[0] }}</div>
+                </button>
+                <div id="profile-dropdown" class="profile-dropdown hidden">
+                    <div class="profile-header">
+                        <div class="profile-avatar large">{{ user.name[0] }}</div>
+                        <div class="profile-info">
+                            <h3>{{ user.name }}</h3>
+                            <p>{{ user.email }}</p>
+                        </div>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <span class="label">Contact</span>
+                            <span class="value">{{ user.contact }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Address</span>
+                            <span class="value">{{ user.address }}</span>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="logout-button">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
