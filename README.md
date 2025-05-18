@@ -82,12 +82,9 @@ Women/
 
 
 🔮 Future Scope
-<div align="center">
 ✅ Voice-input & multilingual NLP support
 ✅ AI-based false complaint validation
 ✅ Government API integration for FIR & RTI
 ✅ Anonymous complaint mode
 ✅ Mobile app version for iOS/Android
 ✅ Heatmaps of risk zones using complaint data
-
-</div>
