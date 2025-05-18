@@ -3,20 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emergency - Safety First</title>
+    <title>Community - Women's Rights</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Existing styles remain unchanged */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #63b3ed;
+            margin-bottom: -10px;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: #a0aec0;
+        }
+
+        .intro-section {
+            background-color: #2d3748;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro-section h2 {
+            font-size: 2rem;
+            color: #edf2f7;
+            margin-bottom: 10px;
+        }
+
+        .intro-section p {
+            font-size: 1rem;
+            color: #cbd5e0;
+            line-height: 1.6;
+        }
+
+        .rights-container {
+            margin-bottom: 30px;
+        }
+
+        .rights-container h2 {
+            font-size: 2rem;
+            color: #edf2f7;
+            margin-bottom: 20px;
+        }
+
+        .rights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .right-item {
+            background-color: #2d3748;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .right-item:hover {
+            transform: scale(1.05);
+        }
+
+        .right-item h3 {
+            font-size: 1.5rem;
+            color: #63b3ed;
+            margin-bottom: 10px;
+        }
+
+        .right-item p {
+            font-size: 1rem;
+            color: #cbd5e0;
+            line-height: 1.5;
+        }
+
+        .action-section {
+            background-color: #2d3748;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-section h2 {
+            font-size: 2rem;
+            color: #edf2f7;
+            margin-bottom: 10px;
+        }
+
+        .action-section ul {
+            list-style: none;
+            padding: 0;
+            color: #cbd5e0;
+        }
+
+        .action-section li {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .action-section li::before {
+            content: "•";
+            color: #63b3ed;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* New Styles for Icons and Videos */
+        .icon {
+            font-size: 2rem;
+            margin-right: 10px;
+            color: #63b3ed;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .video-section {
+            margin: 30px 0;
+            background-color: #2d3748;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .intro-section h2, .rights-container h2, .action-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body class="dark">
     <div class="app-container">
         {% include 'nav.html' %}
         <main class="app-main">
             <div class="page-header">
-                <h1>Emergency Resources</h1>
-                <p>Quick access to emergency contacts and services</p>
+                <h1><i class="fas fa-female icon"></i>Know Your Rights</h1>
+                <p>Empower yourself with knowledge about your rights and the legal protections available to you.</p>
             </div>
-            <div class="content-container">
-                <!-- Content will be added later -->
+
+            <div class="intro-section">
+                <h2><i class="fas fa-balance-scale icon"></i>Introduction</h2>
+                <p>Every woman deserves to live with dignity, freedom, and equality. Learn about the rights that protect you against injustice and discrimination.</p>
+            </div>
+
+            <div class="rights-container">
+                <h2><i class="fas fa-gavel icon"></i>Your Key Rights</h2>
+                <div class="rights-grid">
+                    <div class="right-item">
+                        <h3><i class="fas fa-graduation-cap icon"></i>Right to Education</h3>
+                        <p>Education is a fundamental right. Schools and universities are mandated to provide equal opportunities for women to learn and excel.</p>
+                    </div>
+                    <div class="right-item">
+                        <h3><i class="fas fa-dollar-sign icon"></i>Right to Equal Pay</h3>
+                        <p>Women are entitled to equal pay for equal work. Laws prohibit wage discrimination based on gender.</p>
+                    </div>
+                    <div class="right-item">
+                        <h3><i class="fas fa-shield-alt icon"></i>Right Against Harassment</h3>
+                        <p>Laws protect women from sexual harassment in workplaces, public spaces, and online platforms.</p>
+                    </div>
+                    <div class="right-item">
+                        <h3><i class="fas fa-user-shield icon"></i>Right to Privacy</h3>
+                        <p>Your personal information and life choices are protected by law, ensuring your dignity and autonomy.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-section">
+                <h2><i class="fas fa-video icon"></i>Educational Videos</h2>
+                <div class="video-grid">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/hLr2GNRnmXM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/VF4ZyJRUxk8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <h2><i class="fas fa-fist-raised icon"></i>Take Action</h2>
+                <ul>
+                    <li>File complaints against discrimination and harassment.</li>
+                    <li>Reach out to NGOs for support and guidance.</li>
+                    <li>Engage in community programs to promote women's empowerment.</li>
+                </ul>
             </div>
         </main>
     </div>

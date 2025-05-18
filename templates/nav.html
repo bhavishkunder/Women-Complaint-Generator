@@ -3,7 +3,7 @@
         <div class="nav-left">
             <a href="{{ url_for('dashboard') }}" class="nav-logo">
                 <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Safety First Logo">
-                <span>Safety First</span>
+                <span>HerJustice</span>
             </a>
             <div class="nav-links">
                 <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
@@ -19,14 +19,14 @@
                         <path d="M12 12v-1"></path>
                         <circle cx="12" cy="12" r="9"></circle>
                     </svg>
-                    Emergency
+                    LearnRights
                 </a>
                 <a href="{{ url_for('resources') }}" class="nav-link {% if request.endpoint == 'resources' %}active{% endif %}">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                     </svg>
-                    Resources
+                    Schemes
                 </a>
                 <a href="{{ url_for('community') }}" class="nav-link {% if request.endpoint == 'community' %}active{% endif %}">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -35,16 +35,22 @@
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
-                    Community
+                    Alerts
                 </a>
                 <a href="{{ url_for('settings') }}" class="nav-link {% if request.endpoint == 'settings' %}active{% endif %}">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
-                    Settings
+                    SafeMaps
                 </a>
-            </div>
+                    <a href="{{ url_for('track_complaints') }}" class="nav-link {% if request.endpoint == 'track_complaints' %}active{% endif %}">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 17l-5-5 5-5"></path>
+                            <path d="M20 17l-5-5 5-5"></path>
+                        </svg>
+                        Track Complaints
+                    </a>
         </div>
         <div class="nav-right">
             <div class="profile-section">
@@ -68,6 +74,10 @@
                             <span class="label">Address</span>
                             <span class="value">{{ user.address }}</span>
                         </div>
+                        <div class="detail-item nearest-police-station">
+                            <span class="label">Nearest Police Station</span>
+                            <span class="value" id="police-station-info">Loading...</span>
+                        </div>
                     </div>
                     <a href="{{ url_for('logout') }}" class="logout-button">Sign Out</a>
                 </div>
@@ -75,3 +85,124 @@
         </div>
     </div>
 </nav>
+
+<script>
+    async function geocode(address) {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.length === 0) throw new Error('Location not found');
+        return {
+            latitude: parseFloat(data[0].lat),
+            longitude: parseFloat(data[0].lon),
+            display_name: data[0].display_name
+        };
+    }
+
+    async function findNearbyPoliceStations(lat, lon) {
+        const query = `
+            [out:json][timeout:25];
+            (
+                node["amenity"="police"](around:10000,${lat},${lon});
+                way["amenity"="police"](around:10000,${lat},${lon});
+                relation["amenity"="police"](around:10000,${lat},${lon});
+            );
+            out body;
+            >;
+            out skel qt;
+        `;
+    
+        const response = await fetch('https://overpass-api.de/api/interpreter', {
+            method: 'POST',
+            body: query
+        });
+        const data = await response.json();
+        return data.elements
+            .filter(element => element.type === 'node')
+            .filter(element => !(
+                element.tags?.police === 'traffic' || 
+                (element.tags?.name && element.tags.name.toLowerCase().includes('traffic'))
+            ));
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = 
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const distance = R * c;
+        return distance * 1000;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const userAddress = "{{ user.address }}";
+        const policeStationInfo = document.getElementById('police-station-info');
+        const profileTrigger = document.getElementById('profile-trigger');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        profileTrigger.addEventListener('click', () => {
+            profileDropdown.classList.toggle();
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!profileTrigger.contains(event.target) && !profileDropdown.contains(event.target)) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+
+        try {
+            console.log("Geocoding your location...");
+            const location = await geocode(userAddress);
+            console.log(`Location found: ${location.display_name}`);
+    
+            console.log("Searching for nearby police stations...");
+            const stations = await findNearbyPoliceStations(location.latitude, location.longitude);
+    
+            if (stations.length > 0) {
+                stations.sort((a, b) => {
+                    const distA = calculateDistance(location.latitude, location.longitude, a.lat, a.lon);
+                    const distB = calculateDistance(location.latitude, location.longitude, b.lat, b.lon);
+                    return distA - distB;
+                });
+    
+                const nearestStation = stations[0];
+                const stationName = nearestStation.tags.name || 'Unnamed Police Station';
+                const distance = calculateDistance(
+                    location.latitude,
+                    location.longitude,
+                    nearestStation.lat,
+                    nearestStation.lon
+                );
+    
+                policeStationInfo.innerHTML = `
+                    <div>
+                        <strong>${stationName}</strong><br>
+                        Distance: ${distance.toFixed(0)} meters<br>
+                        Location: ${nearestStation.lat}, ${nearestStation.lon}
+                    </div>
+                `;
+
+                // Send station name to backend
+                fetch('/update-nearest-station', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        station_name: stationName
+                    })
+                });
+
+            } else {
+                policeStationInfo.textContent = 'No police stations found within 10km';
+            }
+        } catch (error) {
+            policeStationInfo.textContent = 'Error finding police stations';
+            console.error('Error:', error.message);
+        }
+    });
+</script>

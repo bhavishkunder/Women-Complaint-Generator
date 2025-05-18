@@ -3,23 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community - Safety First</title>
+    <title>Emergency - Women's Safety</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Keep your existing styles here */
+        
+        /* Add styles for the alert container */
+        #alertContainer {
+            margin-top: 20px;
+        }
+        
+        .alert {
+            background-color: #4a5568;
+            border-left: 5px solid #ed8936;
+            color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        
+        .alert h3 {
+            margin-top: 0;
+            color: #ed8936;
+        }
+    </style>
 </head>
 <body class="dark">
     <div class="app-container">
         {% include 'nav.html' %}
         <main class="app-main">
             <div class="page-header">
-                <h1>Community</h1>
-                <p>Connect with others and share experiences</p>
+                <h1>Emergency Alerts</h1>
+                <p>Real-time alerts based on recent complaints in your area.</p>
             </div>
-            <div class="content-container">
-                <!-- Content will be added later -->
+            <div id="alertContainer">
+                <!-- Alerts will be dynamically inserted here -->
             </div>
         </main>
     </div>
-    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/emergency.js') }}"></script>
 </body>
 </html>
+

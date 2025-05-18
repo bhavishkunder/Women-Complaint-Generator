@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     descriptionTextarea.addEventListener('input', autoResizeTextarea);
 
-    // Form submission
     complaintForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -30,14 +29,33 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Please enter a description of the incident.', 'error');
             return;
         }
-
+    
+        // Add loading state
+        const submitButton = document.querySelector('.submit-button');
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <span class="loading-spinner">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v4" />
+                    <path d="m16.24 7.76 2.83-2.83" />
+                    <path d="M18 12h4" />
+                    <path d="m16.24 16.24 2.83 2.83" />
+                    <path d="M12 18v4" />
+                    <path d="m4.93 19.07 2.83-2.83" />
+                    <path d="M2 12h4" />
+                    <path d="m4.93 4.93 2.83 2.83" />
+                </svg>
+                Processing...
+            </span>
+        `;
+    
         // Store original description
         originalDescription = description;
-
+    
         // Create FormData object
         const formData = new FormData();
         formData.append('description', description);
-
+    
         try {
             const response = await fetch('/process_incident', {
                 method: 'POST',
@@ -53,6 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const data = await response.json();
             
+            // Reset loading state
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Submit';
+            
             if (data.status === 'incomplete') {
                 // Show modal to collect missing information
                 showMissingInfoModal(data.missing_info, data.current_details);
@@ -65,6 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('No complaint data received');
             }
         } catch (error) {
+            // Reset loading state
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Submit';
+            
             console.error('Error:', error);
             showNotification('An error occurred while processing the complaint. Please try again.', 'error');
         }
@@ -217,11 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Create the result HTML
         let resultHTML = `
-            <div class="result-header">
-                <h2>Complaint Analysis</h2>
+           <div class="result-header">
+            <h2>Complaint Analysis</h2>
+            <div class="result-header-buttons">
+                <button class="forward-button" id="forward-to-police">Forward to Police</button>
                 <button class="close-button" id="close-result">×</button>
             </div>
-            <div class="result-content">
+        </div>
+        <div class="result-content">
         `;
 
         let currentSection = '';
@@ -262,6 +291,29 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add close button functionality
         document.getElementById('close-result').addEventListener('click', () => {
             complaintResult.classList.add('hidden');
+        });
+        document.getElementById('forward-to-police').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/forward-to-police', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        complaint_result: complaintText
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert(`Complaint forwarded successfully! Complaint ID: ${data.complaint_id}`);
+                } else {
+                    alert('Error forwarding complaint');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error forwarding complaint');
+            }
         });
     }
 

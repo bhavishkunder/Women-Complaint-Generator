@@ -3,18 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Women Safety App - Login</title>
+    <title>HerJustice - Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .police-login-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #1a5f7a;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .police-login-btn:hover {
+            background-color: #134b61;
+        }
+
+        .app-container {
+            position: relative;
+        }
+    </style>
 </head>
 <body class="dark">
     <div class="app-container">
+        <a href="{{ url_for('police_login') }}" class="police-login-btn">Login as Police Station</a>
         <main class="auth-page">
             <div class="auth-container">
                 <div class="auth-header">
                     <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Women Safety App Logo" class="auth-logo">
-                    <h1>Safety First</h1>
-                    <p class="auth-description">Your safety is our priority. Join our community to access support and resources.</p>
+                    <h1>HerJustice</h1>
+                    <p class="auth-description">Your safety and justice is our priority. Join our community to access support and resources.</p>
                 </div>
                 
                 <div class="auth-box">

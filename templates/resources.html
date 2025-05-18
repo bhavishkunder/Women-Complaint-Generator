@@ -3,23 +3,498 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resources - Safety First</title>
+    <title>Constitution Resources</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+<style>
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1a202c;
+    color: #e2e8f0;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+nav {
+    background-color: #2d3748;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+nav a {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-weight: 500;
+    margin-right: 20px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    color: #edf2f7;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    color: #a0aec0;
+    font-size: 1rem;
+}
+
+.search-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    background-color: #2d3748;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.search-section label {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.search-section select {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #4a5568;
+    background-color: #1a202c;
+    color: #e2e8f0;
+}
+
+#schemes-container {
+    margin-bottom: 20px;
+    background-color: #2d3748;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#schemes-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#schemes-list li {
+    padding: 15px;
+    background-color: #4a5568;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #e2e8f0;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#schemes-list li i {
+    font-size: 1.5rem;
+    color: #63b3ed;
+}
+
+#schemes-list li:hover {
+    background-color: #63b3ed;
+    color: #1a202c;
+}
+
+#schemes-list li:hover i {
+    color: #1a202c;
+}
+
+.scheme-card {
+    background-color: #2d3748;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.scheme-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.scheme-icon {
+    font-size: 2.5rem;
+    color: #63b3ed;
+}
+
+.scheme-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #4a5568;
+    border-radius: 6px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #2d3748;
+    border-radius: 4px;
+}
+
+.meta-item i {
+    color: #63b3ed;
+    font-size: 1.2rem;
+}
+
+.scheme-actions {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.apply-button {
+    background-color: #63b3ed;
+    color: #1a202c;
+}
+
+.apply-button:hover {
+    background-color: #4299e1;
+}
+
+.learn-more-button {
+    background-color: #4a5568;
+    color: #e2e8f0;
+}
+
+.learn-more-button:hover {
+    background-color: #2d3748;
+}
+
+.video-section {
+    margin-top: 30px;
+}
+
+.video-section h3 {
+    margin-bottom: 15px;
+    color: #e2e8f0;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+@media screen and (max-width: 768px) {
+    .search-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-section select {
+        width: 100%;
+    }
+
+    .scheme-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .scheme-actions {
+        flex-direction: column;
+    }
+
+    .action-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
 <body class="dark">
     <div class="app-container">
         {% include 'nav.html' %}
         <main class="app-main">
             <div class="page-header">
-                <h1>Safety Resources</h1>
-                <p>Educational materials and safety guides</p>
+                <h1>Government Schemes for Women</h1>
+                <p>Explore comprehensive information about government schemes and initiatives</p>
             </div>
-            <div class="content-container">
-                <!-- Content will be added later -->
+
+            <div class="search-section">
+                <label for="language-select">Select Language:</label>
+                <select id="language-select">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                </select>
             </div>
+
+            <div id="schemes-container">
+                <ul id="schemes-list"></ul>
+            </div>
+
+            <div id="scheme-details"></div>
         </main>
     </div>
-    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+
+    <script>
+        const schemes = {
+            en: [
+                {
+                    title: "Beti Bachao Beti Padhao",
+                    description: "A comprehensive initiative aimed at improving the child sex ratio and empowering girl children through education, protection, and participation in society.",
+                    icon: "fas fa-graduation-cap",
+                    startYear: 2015,
+                    budget: "₹100 crore annually",
+                    eligibility: "All girl children and their families",
+                    benefits: [
+                        "Financial incentives for girl child education",
+                        "Awareness programs for gender equality",
+                        "Support for higher education",
+                        "Health and nutrition benefits"
+                    ],
+                    applicationProcess: "Apply through local Anganwadi centers or visit official website",
+                    applicationLink: "https://wcd.nic.in/bbbp-schemes",
+                    moreInfoLink: "https://www.india.gov.in/spotlight/beti-bachao-beti-padhao",
+                    videoId: "PmtcILEbOnY"
+                },
+                {
+                    title: "One Stop Centre Scheme",
+                    description: "Integrated support center for women affected by violence, providing medical, legal, psychological, and temporary shelter assistance.",
+                    icon: "fas fa-hand-holding-heart",
+                    startYear: 2015,
+                    budget: "₹50 crore annually",
+                    eligibility: "Women affected by violence, regardless of age, class, caste, education status, marital status, race, and culture",
+                    benefits: [
+                        "24/7 emergency response",
+                        "Medical assistance",
+                        "Legal aid and counseling",
+                        "Psycho-social support",
+                        "Temporary shelter"
+                    ],
+                    applicationProcess: "Visit nearest One Stop Centre or call Women Helpline (181)",
+                    applicationLink: "https://sakhi.gov.in/",
+                    moreInfoLink: "https://wcd.nic.in/schemes/one-stop-centre-scheme-1",
+                    videoId: "K7j9DbP7LQE"
+                },
+                {
+                    title: "Pradhan Mantri Matru Vandana Yojana",
+                    description: "Maternity benefit program providing conditional cash transfer to pregnant women and lactating mothers.",
+                    icon: "fas fa-baby",
+                    startYear: 2017,
+                    budget: "₹2,500 crore annually",
+                    eligibility: "Pregnant women and lactating mothers for first live birth",
+                    benefits: [
+                        "Cash benefit of ₹5,000 in three installments",
+                        "Additional incentive of ₹1,000 under JSY",
+                        "Wage compensation during pregnancy",
+                        "Regular health check-ups"
+                    ],
+                    applicationProcess: "Apply through local ASHA worker or Anganwadi center",
+                    applicationLink: "https://pmmvy.nic.in/",
+                    moreInfoLink: "https://wcd.nic.in/schemes/pradhan-mantri-matru-vandana-yojana",
+                    videoId: "9jYLxZZQ6Rk"
+                },
+                {
+                    title: "Mahila Shakti Kendra",
+                    description: "Community engagement program for empowerment of rural women through awareness generation and capacity building.",
+                    icon: "fas fa-users",
+                    startYear: 2017,
+                    budget: "₹115 crore annually",
+                    eligibility: "Rural women and community organizations",
+                    benefits: [
+                        "Skill development training",
+                        "Employment opportunities",
+                        "Digital literacy",
+                        "Health and nutrition awareness",
+                        "Financial inclusion"
+                    ],
+                    applicationProcess: "Contact District Level Centre for Women or visit website",
+                    applicationLink: "https://wcd.nic.in/schemes/mahila-shakti-kendras",
+                    moreInfoLink: "https://wcd.nic.in/schemes/mahila-shakti-kendras",
+                    videoId: "dQw4w9WgXcQ"
+                },
+                {
+                    title: "Nirbhaya Fund",
+                    description: "Framework for women's safety and security, supporting various initiatives across multiple sectors.",
+                    icon: "fas fa-shield-alt",
+                    startYear: 2013,
+                    budget: "₹1,000 crore corpus fund",
+                    eligibility: "Projects focused on women's safety and security",
+                    benefits: [
+                        "Emergency response system",
+                        "Safe city projects",
+                        "Women help desks in police stations",
+                        "Self-defense training",
+                        "Cyber crime prevention"
+                    ],
+                    applicationProcess: "Implementation through various government departments",
+                    applicationLink: "https://wcd.nic.in/schemes/nirbhaya",
+                    moreInfoLink: "https://wcd.nic.in/schemes/nirbhaya",
+                    videoId: "Y1xS6MqKqGE"
+                }
+            ],
+            hi: [
+                {
+                    title: "बेटी बचाओ बेटी पढ़ाओ",
+                    description: "बालिका के जन्म, शिक्षा और भागीदारी को बढ़ावा देने के लिए एक व्यापक पहल।",
+                    icon: "fas fa-graduation-cap",
+                    startYear: 2015,
+                    budget: "वार्षिक ₹100 करोड़",
+                    eligibility: "सभी बालिकाएं और उनके परिवार",
+                    benefits: [
+                        "बालिका शिक्षा के लिए वित्तीय प्रोत्साहन",
+                        "लैंगिक समानता के लिए जागरूकता कार्यक्रम",
+                        "उच्च शिक्षा के लिए सहायता",
+                        "स्वास्थ्य और पोषण लाभ"
+                    ],
+                    applicationProcess: "स्थानीय आंगनवाड़ी केंद्रों के माध्यम से या वेबसाइट पर आवेदन करें",
+                    applicationLink: "https://wcd.nic.in/bbbp-schemes",
+                    moreInfoLink: "https://www.india.gov.in/spotlight/beti-bachao-beti-padhao",
+                    videoId: "YQyCZ0Zjlq4"
+                }
+                // Add other schemes in Hindi with same structure
+            ],
+            kn: [
+                {
+                    title: "ಬೇಟಿ ಬಚಾವೋ ಬೇಟಿ ಪಢಾವೋ",
+                    description: "ಹೆಣ್ಣು ಮಕ್ಕಳ ಜನನ, ಶಿಕ್ಷಣ ಮತ್ತು ಭಾಗವಹಿಸುವಿಕೆಯನ್ನು ಉತ್ತೇಜಿಸಲು ಒಂದು ಸಮಗ್ರ ಉಪಕ್ರಮ.",
+                    icon: "fas fa-graduation-cap",
+                    startYear: 2015,
+                    budget: "ವಾರ್ಷಿಕ ₹100 ಕೋಟಿ",
+                    eligibility: "ಎಲ್ಲಾ ಹೆಣ್ಣು ಮಕ್ಕಳು ಮತ್ತು ಅವರ ಕುಟುಂಬಗಳು",
+                    benefits: [
+                        "ಹೆಣ್ಣು ಮಕ್ಕಳ ಶಿಕ್ಷಣಕ್ಕೆ ಆರ್ಥಿಕ ಪ್ರೋತ್ಸಾಹ",
+                        "ಲಿಂಗ ಸಮಾನತೆಗಾಗಿ ಜಾಗೃತಿ ಕಾರ್ಯಕ್ರಮಗಳು",
+                        "ಉನ್ನತ ಶಿಕ್ಷಣಕ್ಕೆ ಬೆಂಬಲ",
+                        "ಆರೋಗ್ಯ ಮತ್ತು ಪೌಷ್ಟಿಕತೆ ಪ್ರಯೋಜನಗಳು"
+                    ],
+                    applicationProcess: "ಸ್ಥಳೀಯ ಅಂಗನವಾಡಿ ಕೇಂದ್ರಗಳ ಮೂಲಕ ಅಥವಾ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ",
+                    applicationLink: "https://wcd.nic.in/bbbp-schemes",
+                    moreInfoLink: "https://www.india.gov.in/spotlight/beti-bachao-beti-padhao",
+                    videoId: "PmtcILEbOnY"
+                }
+                // Add other schemes in Kannada with same structure
+            ]
+        };
+
+        function showSchemeDetails(scheme) {
+            const detailsContainer = document.getElementById('scheme-details');
+            detailsContainer.innerHTML = `
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-icon">
+                            <i class="${scheme.icon}"></i>
+                        </div>
+                        <h2>${scheme.title}</h2>
+                    </div>
+                    
+                    <p class="scheme-description">${scheme.description}</p>
+                    
+                    <div class="scheme-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Started: ${scheme.startYear}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-coins"></i>
+                            <span>Budget: ${scheme.budget}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>Eligibility: ${scheme.eligibility}</span>
+                        </div>
+                    </div>
+
+                    <div class="benefits-section">
+                        <h3><i class="fas fa-gift"></i> Benefits</h3>
+                        <ul>
+                            ${scheme.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="application-section">
+                        <h3><i class="fas fa-file-alt"></i> How to Apply</h3>
+                        <p>${scheme.applicationProcess}</p>
+                    </div>
+
+                    <div class="scheme-actions">
+                        <a href="${scheme.applicationLink}" target="_blank" class="action-button apply-button">
+                            <i class="fas fa-paper-plane"></i>
+                            Apply Now
+                        </a>
+                        <a href="${scheme.moreInfoLink}" target="_blank" class="action-button learn-more-button">
+                            <i class="fas fa-info-circle"></i>
+                            Learn More
+                        </a>
+                    </div>
+
+                    <div class="video-section">
+                        <h3><i class="fas fa-play-circle"></i> Watch Video Guide</h3>
+                        <div class="video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/${scheme.videoId}"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            `;
+            detailsContainer.style.display = "block";
+        }
+
+        function populateSchemes() {
+            const selectedLang = document.getElementById('language-select').value;
+            const schemesList = document.getElementById('schemes-list');
+            schemesList.innerHTML = "";
+            
+            schemes[selectedLang].forEach(scheme => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <i class="${scheme.icon}"></i>
+                    <span>${scheme.title}</span>
+                `;
+                li.addEventListener('click', () => showSchemeDetails(scheme));
+                schemesList.appendChild(li);
+            });
+        }
+
+        document.getElementById('language-select').addEventListener('change', populateSchemes);
+        populateSchemes();
+    </script>
 </body>
 </html>

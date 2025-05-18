@@ -3,23 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Safety First</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Safety Maps</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #63b3ed;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: #a0aec0;
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body class="dark">
+    <!-- Navbar inclusion -->
+    {% include 'nav.html' %}
+    
     <div class="app-container">
-        {% include 'nav.html' %}
         <main class="app-main">
             <div class="page-header">
-                <h1>Settings</h1>
-                <p>Manage your account and preferences</p>
+                <h1>Safety Maps</h1>
+                <p>Find nearby police stations, hospitals, and NGOs to stay safe and informed.</p>
             </div>
-            <div class="content-container">
-                <!-- Content will be added later -->
-            </div>
+            <div id="map"></div>
         </main>
     </div>
-    <script src="{{ url_for('static', filename='js/nav.js') }}"></script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map with the new location
+        const map = L.map('map').setView([13.134178217795826, 77.56938608912589], 14); // Adjusted zoom level (zoomed in)
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Define a 20 km radius circle for context
+        const radiusCircle = L.circle([13.134178217795826, 77.56938608912589], {
+            color: '#63b3ed',
+            fillColor: '#63b3ed',
+            fillOpacity: 0.2,
+            radius: 20000 // 20 km radius
+        }).addTo(map);
+
+        // Define locations for police stations, hospitals, and NGOs
+        const locations = [
+            {
+                type: 'Police Station',
+                name: 'Yelahanka Police Station',
+                lat: 13.100195,
+                lng: 77.596776,
+                address: 'Yelahanka, Bengaluru'
+            },
+            {
+                type: 'Police Station',
+                name: 'Vidyaranyapura Police Station',
+                lat: 13.073044,
+                lng: 77.565563,
+                address: 'Vidyaranyapura, Bengaluru'
+            },
+            {
+                type: 'Hospital',
+                name: 'Columbia Asia Hospital',
+                lat: 13.070298,
+                lng: 77.589561,
+                address: 'Yelahanka, Bengaluru'
+            },
+            {
+                type: 'Hospital',
+                name: 'Manipal Northside Hospital',
+                lat: 13.045784,
+                lng: 77.571482,
+                address: 'Malleshwaram, Bengaluru'
+            },
+            {
+                type: 'NGO',
+                name: 'Smile Foundation',
+                lat: 13.128214,
+                lng: 77.575854,
+                address: 'Avalahalli, Bengaluru'
+            },
+            {
+                type: 'NGO',
+                name: 'Goonj NGO',
+                lat: 13.119398,
+                lng: 77.563217,
+                address: 'Kodigehalli, Bengaluru'
+            }
+        ];
+
+        // Custom marker icons
+        const iconSize = [40, 40]; // Enlarged icons
+
+        const icons = {
+            'Police Station': L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/2620/2620267.png',
+                iconSize,
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -40]
+            }),
+            'Hospital': L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/2967/2967357.png',
+                iconSize,
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -40]
+            }),
+            'NGO': L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/4108/4108967.png',
+                iconSize,
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -40]
+            })
+        };
+
+        // Add markers to the map
+        locations.forEach(location => {
+            const marker = L.marker([location.lat, location.lng], { icon: icons[location.type] }).addTo(map);
+            marker.bindPopup(`
+                <div>
+                    <h3>${location.name}</h3>
+                    <p><strong>Type:</strong> ${location.type}</p>
+                    <p><strong>Address:</strong> ${location.address}</p>
+                </div>
+            `);
+
+            // Add a label for the type
+            const label = L.divIcon({
+                className: 'marker-label',
+                html: `<div style="color: #fff; background: #63b3ed; padding: 5px 10px; border-radius: 5px;">${location.type}</div>`,
+                iconSize: [100, 20],
+                iconAnchor: [50, 0]
+            });
+            L.marker([location.lat, location.lng], { icon: label }).addTo(map);
+        });
+
+        // Add user's location marker
+        const userLocation = L.marker([13.134178217795826, 77.56938608912589], {
+            icon: L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/1057/1057104.png',
+                iconSize,
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -40]
+            })
+        }).addTo(map);
+        userLocation.bindPopup('<strong>You are here!</strong>').openPopup();
+    </script>
 </body>
 </html>
